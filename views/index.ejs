@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+  hiiiii im index.ejs turned into html
+
+
+  <ul>
+    <h4>Fruits</h4>
+    <% fruit.forEach((item, i) => { %>
+      <li> <%= item.name %> </li>
+      <li> <%= item.color %></li>
+     <form action="/fruits/<%= i %>?_method=DELETE" method="POST">
+        <button type="submit">delete</button>
+     </form>
+    <% }) %>
+  </ul>
+
+
+  <script src="/javascripts/app.js"></script>
+</body>
+</html>
