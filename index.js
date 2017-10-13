@@ -2,6 +2,7 @@ const express = require('express');
 const app     = express();
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
+require('./db/db')
 
 // require our controllers
 const fruitController = require('./controllers/fruits')

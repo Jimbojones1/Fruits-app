@@ -15,7 +15,8 @@
     <% fruit.forEach((item, i) => { %>
       <li> <%= item.name %> </li>
       <li> <%= item.color %></li>
-     <form action="/fruits/<%= i %>?_method=DELETE" method="POST">
+      <a href="/fruits/<%= item.id %>" title=""><%= item.name %></a>
+     <form action="/fruits/<%= item.id %>?_method=DELETE" method="POST">
         <button type="submit">delete</button>
      </form>
     <% }) %>

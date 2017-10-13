@@ -1,13 +1,20 @@
 const express = require('express');
 const router  = express.Router();
-const fruits = require('../models/fruits')
+const fruit = require('../models/fruits')
 
 router.get('/', (req, res) => {
 
-  res.render('index', {
-                        fruit: fruits
-                      })
-})
+  fruit.find((err, fruits)=> {
+
+    if(err) {
+      res.send('there was error with the database')
+    } else {
+       res.render('index', {
+                      fruit: fruits
+                    })
+    } // end of if else
+  }) // end of mongo query
+}) // end of route
 
 router.get('/new', (req, res ) => {
   res.render('new', {})
@@ -15,20 +22,29 @@ router.get('/new', (req, res ) => {
 
 // To write a the show route for each individual fruit
 router.get('/:index', (req, res) => {
-  res.render('show', {fruit: fruits[req.params.index]})
+  console.log('hitting')
+  fruit.findById(req.params.index, (err, fruit)=> {
+    res.render('show', {fruit: fruit})
+  })
+
+
 })
 
 router.get('/:index/edit', (req, res) => {
-  res.render('edit', {
-                      fruit: fruits[req.params.index],
-                      index: req.params.index
+
+  fruit.findById(req.params.index, (err, fruit) => {
+    if(err) {
+      res.send('error updating')
+    } else {
+       res.render('edit', {
+                      fruit: fruit
                       })
+    }
+  })// end of model query
 });
 
 
-router.get('/:name', (req, res) => {
-  res.send(req.params.name)
-});
+
 
 router.post('/create', (req, res) => {
   console.log(req.body)
@@ -39,9 +55,17 @@ router.post('/create', (req, res) => {
     req.body.readyToEat = false;
   }
 
-  fruits.push(req.body)
+  // fruits.push(req.body)
+  fruit.create(req.body, (err, fruit) => {
+    if(err){
+      res.send('there was an error create the fruit')
+    } else {
+      console.log(fruit);
+      res.redirect('/fruits')
+    }
+  })
 
-  res.redirect('/fruits')
+
 })
 
 router.put('/:index/edit', (req, res) => {
@@ -52,9 +76,16 @@ router.put('/:index/edit', (req, res) => {
     req.body.readyToEat = false;
   }
 
-  fruits[req.params.index] = req.body;
+  fruit.findByIdAndUpdate(req.params.index, req.body, (err, fruit) => {
+    if(err) {
+      res.send('there was an error updating')
+    } else {
+      res.redirect('/fruits')
+    }
+  })
 
-  res.redirect('/fruits')
+
+
 })
 
 
@@ -63,9 +94,17 @@ router.delete('/:index', (req, res) => {
   console.log(req.params.index)
   // model is removing the item out of the array in
   // models folder
-  fruits.splice(req.params.index, 1);
 
-  res.redirect('/fruits')
+
+  fruit.findByIdAndRemove(req.params.index, (err, fruit) => {
+    if(err) {
+      res.send('error deleting')
+    } else {
+      res.redirect('/fruits')
+    }
+  })
+
+
 })
 
 
